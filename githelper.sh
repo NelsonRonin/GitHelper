@@ -183,6 +183,8 @@ function cd() {
   git config --global user.name >/dev/null
   ACTIVE_USER_NAME=$?
 
+  ### todo: check if cd in projects root directory
+
   ### get username from given path
   NEW_USER_NAME=""
   IFS=/ read -ra values <<< "$@"
@@ -195,7 +197,7 @@ function cd() {
   done
 
   ### check if directory is git user directory
-  if [ "$ACTIVE_USER_NAME" != "$NEW_USER_NAME" ]; then
+  if [ "$NEW_USER_NAME" != "" ] && [ "$ACTIVE_USER_NAME" != "$NEW_USER_NAME" ]; then
     USER_CONFIG=""
 
     ### read the user line from githelper config file
@@ -365,7 +367,7 @@ gitHelperInstall() {
 
     ### set dir if does not exist
     if [ ! -d "$PROJECTS_DIR" ]; then
-      mkdir -p "$PROJECTS_DIR"
+      install -d -m 0755 -o $USER -g $USER $PROJECTS_DIR
     fi
     ### save dir path to config file
     writeLineToFile "$CONFIG_FILE" "${CONFIG_PARAMS[projectsRoot]}$PROJECTS_DIR"
@@ -386,7 +388,8 @@ gitHelperAddUser() {
   read -p "Please enter your Git Email: " -r USER_EMAIL
 
   ### set user directory and open directory
-  sudo mkdir -p "$PROJECTS_DIR/$USER_NAME"
+  install -d -m 0755 -o $USER -g $USER $PROJECTS_DIR/$USER_NAME
+
   ### add git config user data
   setGitUser "$USER_NAME" "$USER_EMAIL"
   ### save projects root directory to config file

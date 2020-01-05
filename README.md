@@ -68,12 +68,27 @@ Here a list of all creating aliases:
 | `frbm` | `git fetch origin master && git rebase origin/master` | Fetch newest master version and rebase your current branch with origin/master |
 | `mrg` | `git merge` | Merge a different branch into your active branch |
 | `dff` | `git diff` | View all the merge conflicts (of active merging) |
-| `lg` | `git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit` | Show all commits with their ids and messages (better styles) |
-| `lgp` | `git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -p` | Show all commits with their ids and messages and the changed lines (better styles) |
 | `lrr` | `git remote -v` | List all currently configured remote repositories |
 | `lb` | `git branch` | List all the branches in your repo, and also tell you what branch you're currently in |
 | `lconf` | `git config --list` | List all your git configurations |
-| `lalias` | `git config --global alias.alias "! git config --get-regexp ^alias\. | sed -e s/^alias\.// -e s/\ /\ =\ /"` | List all git aliases |
 
 ## Configuration
-...
+### Projects root directory
+The script wants the user to set a default directory where all git projects will be placed.  
+Inside this root directory all git user directories will be created. So all local repositories are placed centralized.
+
+### Add Git User
+(These steps can be run without running the whole installation script. simply run the script with the argument `add-user`)  
+  
+For using Git you need to have a Git account and this account needs to be set in your local git configuration.  
+So the next step of the script is to add a git user to the local configuration and create a folder for this account.  
+The user will be asked to enter his git username and email. These will be set in the global git configuration and a new directory will be created with the given username.  
+  
+In the end of the user configuration, the user will be asked if an SSH Key pair should be created for this account.  
+If the answer is yes, an ssh key pair will be created (ssh-keygen) with the given username.  
+The public SSH key will be outputted, so the user can copy it into the Github Account settings.  
+
+### Git User Directory Listener
+The last step of the script is to create a listener for all created git account directories.  
+The listener checks on every `cd` command, if you are currently in a git account directory and automatically changes the global git user configuration to this git account.  
+With this listener users will not have to change their git user settings every time they work on a different repository. 

@@ -6,6 +6,8 @@ function cd() {
   git config --global user.name >/dev/null
   ACTIVE_USER_NAME=$?
 
+  ### todo: check if cd in projects root directory
+
   ### get username from given path
   NEW_USER_NAME=""
   IFS=/ read -ra values <<< "$@"
@@ -18,7 +20,7 @@ function cd() {
   done
 
   ### check if directory is git user directory
-  if [ "$ACTIVE_USER_NAME" != "$NEW_USER_NAME" ]; then
+  if [ "$NEW_USER_NAME" != "" ] && [ "$ACTIVE_USER_NAME" != "$NEW_USER_NAME" ]; then
     USER_CONFIG=""
 
     ### read the user line from githelper config file
